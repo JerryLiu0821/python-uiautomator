@@ -1,0 +1,12 @@
+smoke.com.phone.smoke.LeJian#testLeJianPerformance
+smoke.com.phone.smoke.LiveVideo#testChangeChannel
+smoke.com.phone.smoke.LiveVideo#testLiveInterHome
+smoke.com.phone.smoke.LiveVideo#testLiveUnlock
+smoke.com.phone.smoke.LetvVideo#testPlayNext
+smoke.com.phone.smoke.LetvVideo#testChangeVolume
+smoke.com.phone.smoke.LetvVideo#testSelectItemPlay
+smoke.com.phone.smoke.LetvVideo#testPausePlay
+smoke.com.phone.smoke.LetvVideo#testSeek
+smoke.com.phone.smoke.LetvVideo#testSwitchOriention
+smoke.com.phone.smoke.LetvVideo#testSwitchResolution
+smoke.com.phone.smoke.LetvVideo#testPlay3minCheckLoading
