@@ -218,12 +218,16 @@ def HtmlReport(suitetest, path):
             f.write(s + '\n')
             s = re.sub(r'<.*?>', '', s)
             if s != '': print (s)
+        output('<html>')
+        output('<head>')
         output('<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />')
-#output('<style>')
-#       output('table{ background:#aaa;}')
-#       output('table tr td{ background:#fff;}')
-#       output('</style>')
+        output('<style type="text/css">')
+        output('html{background:#D2D460;text-align:center;}')
+        output('body{width:800px;margin:0 auto;background:#fff;text-align:left;}')
+        output('</style>')
+        output('</head>')
 
+        output('<body>')
         output('<table width="650" border="0" >')
         output('<tr style="background-color:PowderBlue;text-align:center;"><td colspan="2"><h1>AutoSmoke Summary Result</h1></td></tr>')
         output('<tr style="background-color:PowderBlue;"><td><h3>Product</h3></td><td><h3>%s</h3></td></tr>'%PRODUCT)
@@ -284,6 +288,8 @@ def HtmlReport(suitetest, path):
                 output("</tr>")
 
         output('</table>')
+        output('</body>')
+        output('</html>')
 
     except Exception, e:
         print e
