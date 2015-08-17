@@ -236,6 +236,7 @@ def HtmlReport(suitetest, path):
         output('<tr style="background-color:green;"><td><h3>Pass</h3></td><td><h3>%s</h3></td></td></tr>'%SUCCESS)
         output('<tr style="background-color:red;"><td><h3>Fail</h3></td><td><h3>%s</h3></td></tr>'%FAILED)
         output('<tr style="background-color:yellow;"><td><h3>Error</h3></td><td><h3>%s</h3></td></tr>'%ERROR)
+        output('<tr style="background-color:gray;"><td><h3>wiki</h3></td><td><h3>http://wiki.letv.cn/pages/viewpage.action?pageId=37329525</h3></td></tr>')
         output('</table>')
         output('<br />')
 
