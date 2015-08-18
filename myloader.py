@@ -305,12 +305,14 @@ def prepare():
             1. create logging directory
             2. catpure logcat, kmesg
     """
+    """
     # check if another uiautomator case is running
     uiautomatorPs = run_sh_command('adb -s %s shell ps| grep uiautomator' %option.serialno)
     if uiautomatorPs != "":
         ps = re.compile(r'\s+').split(uiautomatorPs)[1]
         print "Kill Another UiAutomator Case[%s]" %ps
         run_sh_command('adb -s %s shell kill %s' %(option.serialno, ps))
+    """
 
     global report, resultDirectory, logDirectory
     if 'report' not in globals().keys():
