@@ -22,7 +22,7 @@ class TestCase():
         else:
             self.names.append(castlist.strip())
         self.result = None
-        self.output = ""
+        self.output = []
         self.errorinfo = ""
         self.runtime = ""
         self.descriptive = ""
@@ -60,6 +60,8 @@ class TestSuite():
     def _convertCastList(self, casestr):
         """return a tuple contain jar, and castlist"""
         castlist = []
+        if casestr == "":
+            raise Exception("no case found")
         names = casestr.split(",")
         for name in names:
             castlist.append(name.split(".", 1)[1])
@@ -90,7 +92,9 @@ def adb_connect():
         run_sh_command('adb disconnect ' + option.serialno)
         time.sleep(1)
         logging.debug("connect %s" %option.serialno)
-        run_sh_command('adb connect ' + option.serialno)
+        s = run_sh_command('adb connect ' + option.serialno)
+        if 'unable to connect to' in s.split(os.linesep)[0]:
+            return 1
         time.sleep(2)
         logging.debug("root %s" %option.serialno)
         run_sh_command('adb -s %s root' %option.serialno)
@@ -115,12 +119,15 @@ def adb_connect():
         _retry_time = 5
         s=run_sh_command("adb connect "+option.serialno)
         s = s.split(os.linesep)
+        connectflag = 0
         if 'unable to connect to' in s[0]:
-            print "retry connect " + option.serialno
             for i in range(_retry_time):
-                connect()
+                print  "retry connect " + option.serialno +" %s" %i
+                connectflag = connect()
                 if 'unable to connect to' not in run_sh_command("adb connect "+option.serialno).split(os.linesep)[0]:
                     break;
+        if connectflag == 1:
+            raise AdbException("can not connect to "+option.serialno)
     else:
         logging.debug("root %s" %option.serialno)
         s = run_sh_command('adb -s %s root' %option.serialno)
@@ -238,24 +245,6 @@ def HtmlReport(suitetest, path):
         output('<tr style="background-color:yellow;"><td><h3>Error</h3></td><td><h3>%s</h3></td></tr>'%ERROR)
         output('</table>')
         output('<br />')
-
-        """
-        try:
-            import pygal
-            pie_chart = pygal.Pie(width=800, height=400, print_values=True, print_zeroes=True)
-            pie_chart.title = 'All Running Case Result Summary (in %)'
-            pie_chart.add("PASS", SUCCESS)
-            pie_chart.add("FAIL", FAILED)
-            pie_chart.add("ERROR", ERROR)
-            pie_chart.value_formatter = lambda x: "%.15f" % x
-            pie_chart.render_to_file(os.path.join(path,"overload.svg"))
-            #use width and height to zoom picture
-            output('<iframe src="overload.svg" width="800" height="400">')
-            output('</iframe>')
-        except Exception, e:
-            print "import pygal error"
-            print e
-        """
 
         output('<table heigh="500" width="800" border="0">')
         output('<tr style="background-color:PowderBlue;text-align:center;"><td colspan="4"><h1>AutoSmoke Detail Result</h1></td></tr>')
@@ -399,6 +388,21 @@ def pushjar(device, jar):
         try_time += 1
     if not re.compile(r'\d+ KB/s.*').match(r):
         raise AdbException("fail to push %s" %jar)
+
+def installApk(device, apk):
+    if apk == None:
+        print "no apk to install"
+        return;
+    r = run_sh_command("adb -s %s install -r %s" %(device, apk))
+    try_time = 1
+    while "Success" not in r and try_time <= 10:
+        print "try to install %s : %d" %(apk, try_time)
+        r = run_sh_command("adb -s %s install -r %s" %(device,apk))
+        try_time += 1
+    if "Success" not in r and try_time >= 10:
+        raise AdbException("fail to install %s"%apk)
+
+
 
 def main():
     parse = OptionParser()
